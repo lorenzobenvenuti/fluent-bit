@@ -940,10 +940,12 @@ int flb_tail_file_append(char *path, struct stat *st, int mode,
     flb_sds_t inode_str;
 
     if (!S_ISREG(st->st_mode)) {
+        flb_debug("[in_tail] file %s is not a regular file", path);
         return -1;
     }
 
     if (flb_tail_file_exists(st, ctx) == FLB_TRUE) {
+        flb_debug("[in_tail] file %s already registered", path);
         return -1;
     }
 
@@ -984,7 +986,7 @@ int flb_tail_file_append(char *path, struct stat *st, int mode,
     /* store the hash key used for hash_bits */
     ret = stat_to_hash_key(ctx, st, &hash_key);
     if (ret != 0) {
-        flb_plg_error(ctx->ins, "error procesisng hash key for file %s", path);
+        flb_plg_error(ctx->ins, "error processing hash key for file %s", path);
         goto error;
     }
     file->hash_key = hash_key;
@@ -1013,6 +1015,7 @@ int flb_tail_file_append(char *path, struct stat *st, int mode,
                                              ctx->buf_max_size);
 
         if (file->decompression_context == NULL) {
+            flb_debug("[in_tail] cannot create decompression context");
             goto error;
         }
     }
@@ -1167,6 +1170,7 @@ int flb_tail_file_append(char *path, struct stat *st, int mode,
     ret = set_file_position(ctx, file);
     if (ret == -1) {
         flb_tail_file_remove(file);
+        flb_debug("[in_tail] could not set file position");
         goto error;
     }
 
@@ -1187,7 +1191,7 @@ int flb_tail_file_append(char *path, struct stat *st, int mode,
 
     if (file->sl_log_event_encoder == NULL) {
         flb_tail_file_remove(file);
-
+        flb_debug("[in_tail] could not create sl log event encoder")
         goto error;
     }
 
@@ -1196,7 +1200,7 @@ int flb_tail_file_append(char *path, struct stat *st, int mode,
 
     if (file->ml_log_event_encoder == NULL) {
         flb_tail_file_remove(file);
-
+        flb_debug("[in_tail] could not create ml log event encoder")
         goto error;
     }
 
