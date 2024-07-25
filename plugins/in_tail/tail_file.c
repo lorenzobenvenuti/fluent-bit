@@ -1191,7 +1191,7 @@ int flb_tail_file_append(char *path, struct stat *st, int mode,
 
     if (file->sl_log_event_encoder == NULL) {
         flb_tail_file_remove(file);
-        flb_debug("[in_tail] could not create sl log event encoder")
+        flb_debug("[in_tail] could not create sl log event encoder");
         goto error;
     }
 
@@ -1200,7 +1200,7 @@ int flb_tail_file_append(char *path, struct stat *st, int mode,
 
     if (file->ml_log_event_encoder == NULL) {
         flb_tail_file_remove(file);
-        flb_debug("[in_tail] could not create ml log event encoder")
+        flb_debug("[in_tail] could not create ml log event encoder");
         goto error;
     }
 
